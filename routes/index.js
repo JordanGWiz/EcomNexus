@@ -1,10 +1,25 @@
-const router = require('express').Router();
-const apiRoutes = require('./api');
+// Import Models Here
+const Product = require("./Product");
+const Category = require("./Category");
+const Tag = require("./Tag");
+const ProductTag = require("./ProductTag");
 
-router.use('/api', apiRoutes);
-
-router.use((req, res) => {
-  res.send("<h1>Wrong Route!</h1>")
+// Associations
+Product.belongsTo(Category, {
+  foreignKey: "category_id",
 });
 
-module.exports = router;
+Category.hasMany(Product, {
+  foreignKey: "category_id",
+});
+
+Product.belongsToMany(Tag, { through: ProductTag });
+Tag.belongsToMany(Product, { through: ProductTag });
+
+// Export Models
+module.exports = {
+  Product,
+  Category,
+  Tag,
+  ProductTag,
+};
